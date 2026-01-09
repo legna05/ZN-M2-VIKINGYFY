@@ -22,11 +22,12 @@ permissions: write-all
 jobs:
   config:
     name: ${{ matrix.CONFIG }}
+    # [优化] 确保前置自动化清理成功后才运行
     if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch' }}
     strategy:
       fail-fast: false
       matrix:
-        CONFIG: [IPQ60XX-WIFINO]
+        CONFIG: [IPQ60XX-WIFI-NO]
         SOURCE: [VIKINGYFY/immortalwrt]
         BRANCH: [main]
 
@@ -36,8 +37,11 @@ jobs:
       WRT_THEME: argon
       WRT_NAME: OpenWRT
       WRT_IP: 192.168.1.1
+      WRT_PW: password
       WRT_SOURCE: ${{ matrix.SOURCE }}
       WRT_BRANCH: ${{ matrix.BRANCH }}
       WRT_REPO: https://github.com/${{ matrix.SOURCE }}
       WRT_PACKAGE: ${{ github.event.inputs.PACKAGE }}
       WRT_TEST: ${{ github.event.inputs.TEST || 'false' }}
+      WRT_SSID: DISABLED
+      WRT_WORD: DISABLED
