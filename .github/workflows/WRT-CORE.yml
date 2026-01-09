@@ -1,4 +1,4 @@
-# 云编译公用核心 - 极致 100% 完美版
+# 云编译公用核心 - 极致 100% 纯净版
 name: WRT-CORE
 
 on:
@@ -35,13 +35,11 @@ jobs:
 
       - name: Initialization Environment
         run: |
-          # 1. 极致深度清理磁盘空间
           sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /usr/local/share/boost /usr/share/swift /var/lib/mongodb /usr/local/share/powershell
           sudo docker image prune -a -f
           sudo apt-get remove -y 'php.*' 'mysql.*' 'azure.*' 'google.*' firefox google-chrome-stable powershell
           sudo apt-get autoremove -y
           sudo apt-get clean
-          # 2. 注入编译环境依赖
           sudo bash -c 'bash <(curl -sL https://build-scripts.immortalwrt.org/init_build_environment.sh)'
           sudo timedatectl set-timezone "Asia/Shanghai"
 
@@ -59,28 +57,21 @@ jobs:
       - name: Custom Packages
         run: |
           cd ./wrt/package/
-          # 调用外部脚本更新插件
           bash $GITHUB_WORKSPACE/Scripts/Packages.sh
 
       - name: Custom Handles
         run: |
           cd ./wrt/
-          # 执行 NSS 优化、去无线补丁、Rust 修复
           bash $GITHUB_WORKSPACE/Scripts/Handles.sh
 
       - name: Custom Settings
         run: |
           cd ./wrt/
-          # 组合配置文件：设备配置 + 通用配置
           cat $GITHUB_WORKSPACE/Config/$WRT_CONFIG.txt $GITHUB_WORKSPACE/Config/GENERAL.txt > .config
-          
-          # 显式导出变量供 Settings.sh 使用
           export WRT_IP=${{ inputs.WRT_IP }}
           export WRT_NAME=${{ inputs.WRT_NAME }}
           export WRT_PACKAGE=${{ inputs.WRT_PACKAGE }}
           bash $GITHUB_WORKSPACE/Scripts/Settings.sh
-          
-          # 修正依赖关系并静默处理
           make defconfig
 
       - name: Download Packages
@@ -94,7 +85,6 @@ jobs:
         if: env.WRT_TEST != 'true'
         run: |
           cd ./wrt/
-          # 首次尝试多线程，失败则单线程输出详细日志
           make -j$(nproc) || make -j1 V=s
 
       - name: Package Firmware
@@ -102,7 +92,6 @@ jobs:
           cd ./wrt/ && mkdir ./upload/
           cp -f ./.config ./upload/Config-"$WRT_CONFIG"-"$WRT_DATE".txt
           if [[ $WRT_TEST != 'true' ]]; then
-            # 清理无用后缀文件
             find ./bin/targets/ -iregex ".*\(buildinfo\|json\|sha256sums\|packages\)$" -exec rm -rf {} +
             cp -rf $(find ./bin/targets/ -type f -name "*$WRT_TARGET*") ./upload/
           fi
