@@ -26,6 +26,7 @@ repos=(
     "lucky https://github.com/gdy666/luci-app-lucky.git;main"
     "gecoosac https://github.com/lwb1978/openwrt-gecoosac.git;main"
     "ddns_go https://github.com/sirpdboy/luci-app-ddns-go.git;main"
+    "socat https://github.com/chenmozhijin/luci-app-socat;main"
 )
 
 # 批量添加
