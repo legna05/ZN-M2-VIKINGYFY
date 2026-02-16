@@ -39,3 +39,6 @@ else
     echo "golang包替换失败，请检查网络或仓库地址"
     exit 1
 fi
+
+# TTYD 免登录
+sed -i 's|/bin/login|/bin/login -f root|g' $PARENT_DIR/wrt/feeds/packages/utils/ttyd/files/ttyd.config
