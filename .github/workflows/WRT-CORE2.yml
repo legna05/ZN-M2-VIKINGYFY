@@ -96,7 +96,7 @@ jobs:
         run: |
           git clone --depth=1 --single-branch --branch $WRT_BRANCH $WRT_REPO ./wrt/
 
-          cd ./wrt/ && echo "WRT_HASH=$(git log -1 --pretty=format:'%h')" >> $GITHUB_ENV
+          cd ./wrt/ && echo "WRT_HASH=$(git log -1 --pretty=format:'%h')" >> $GITHUB_ENV && echo "WRT_PATH=$PWD" >> $GITHUB_ENV
 
           # GitHub Action 移除国内下载源
           PROJECT_MIRRORS_FILE="./scripts/projectsmirrors.json"
@@ -144,17 +144,34 @@ jobs:
             echo "caches cleanup done!"
           fi
 
+      - name: Diy Step 1
+        run: |
+          cd ./wrt/package/
+          $GITHUB_WORKSPACE/Scripts/diy_p1.sh
+
       - name: Update Feeds
         run: |
           cd ./wrt/
-
           ./scripts/feeds update -a
+
+      - name: Diy Step 2
+        run: |
+          cd ./wrt/package/
+          $GITHUB_WORKSPACE/Scripts/diy_p2.sh
+
+      - name: install Feeds
+        run: |
+          cd ./wrt/
           ./scripts/feeds install -a
+
+      - name: Diy Step 3
+        run: |
+          cd ./wrt/package/
+          $GITHUB_WORKSPACE/Scripts/diy_p3.sh
 
       - name: Custom Packages
         run: |
           cd ./wrt/package/
-
           $GITHUB_WORKSPACE/Scripts/Packages.sh
           $GITHUB_WORKSPACE/Scripts/Handles.sh
 
