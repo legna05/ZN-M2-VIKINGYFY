@@ -23,7 +23,6 @@ sed -i '/packages_ext/d' "$FEEDS_PATH"
 repos=(
     "passwall_packages https://github.com/Openwrt-Passwall/openwrt-passwall-packages.git;main"
     "passwall_luci https://github.com/Openwrt-Passwall/openwrt-passwall.git;main"
-    "lucky https://github.com/gdy666/luci-app-lucky.git;main"
     "gecoosac https://github.com/lwb1978/openwrt-gecoosac.git;main"
     "ddns_go https://github.com/sirpdboy/luci-app-ddns-go.git;main"
     "socat https://github.com/chenmozhijin/luci-app-socat;main"
