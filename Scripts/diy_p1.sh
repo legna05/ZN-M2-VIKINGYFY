@@ -21,8 +21,7 @@ sed -i '/packages_ext/d' "$FEEDS_PATH"
 
 # 定义要添加的源列表（格式："关键字 源名称 源地址;分支"）
 repos=(
-    "passwall_packages https://github.com/Openwrt-Passwall/openwrt-passwall-packages.git;main"
-    "passwall_luci https://github.com/Openwrt-Passwall/openwrt-passwall.git;main"
+    "openclash https://github.com/vernesong/OpenClash;master"
     "lucky https://github.com/gdy666/luci-app-lucky.git;main"
     "gecoosac https://github.com/lwb1978/openwrt-gecoosac.git;main"
     "ddns_go https://github.com/sirpdboy/luci-app-ddns-go.git;main"
